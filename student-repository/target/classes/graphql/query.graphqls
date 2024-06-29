@@ -1,0 +1,25 @@
+type Query {
+	getStudentById(id : Int) : StudentResponse
+}
+
+input SampleRequest {
+	firstName : String!
+	lastName : String!
+	email : String!
+}
+
+type StudentResponse {
+	id : Int
+	firstName : String
+	lastName : String
+	email : String
+	street : String
+	city : String
+	fullName : String
+}
+
+type SubjectResponse {
+	id : Int
+	subjectName : String
+	marksObtained : Float
+}

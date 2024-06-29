@@ -1,0 +1,4 @@
+
+type Mutation {
+  addStudent( request : SampleRequest) : StudentResponse!
+}
