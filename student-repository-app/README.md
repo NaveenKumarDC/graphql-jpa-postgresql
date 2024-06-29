@@ -39,19 +39,23 @@
 - Clone the Repository
 - Setup local Postgresql15
 - Update application.properties file with below properties
-    - ## PostgreSQL
+    - ##### PostgreSQL
+      ````
       spring.datasource.url=jdbc:postgresql://localhost:5432/<DATA_BASE_NAME>
       spring.datasource.username=<USER_NAME>
       spring.datasource.password=<PASSWORD>
+      ````
 - Run spring boot application
     - Verify if Graphiql client started by checking the console logs
         - 2024-06-29T05:23:10.231+05:30  INFO 11879 --- [student-repository] [           main] s.b.a.g.s.GraphQlWebMvcAutoConfiguration : GraphQL endpoint HTTP POST /graphql
           2024-06-29T05:23:10.404+05:30  INFO 11879 --- [student-repository] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8093 (http) with context path '/'
-- Go to web broweser
-    - http://localhost:<APPLICATION_PORT>/graphiql?path=/graphql
-        - APPLICATION_PORT - Refer to application console logs ("Tomcat started on port" 8093 (http))
-- Go to Altair GraphQL Client and execute below queries
-
+- Go to web browser
+    ````
+   http://localhost:<APPLICATION_PORT>/graphiql?path=/graphql
+  ````
+   APPLICATION_PORT - Refer to application console logs ("Tomcat started on port" 8093 (http))
+  
+### Altair GraphQL Client
 
 #### GraphQL Query
 #### Query Student
