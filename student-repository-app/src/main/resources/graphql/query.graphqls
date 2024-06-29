@@ -2,24 +2,24 @@ type Query {
 	getStudentById(id : Int) : StudentResponse
 }
 
-input SampleRequest {
-	firstName : String!
-	lastName : String!
-	email : String!
-}
-
 type StudentResponse {
 	id : Int
 	firstName : String
+	fullName: String
 	lastName : String
 	email : String
-	street : String
-	city : String
-	fullName : String
+	address: AddressResponse
+	learningSubjects: [SubjectResponse]
 }
 
 type SubjectResponse {
 	id : Int
 	subjectName : String
 	marksObtained : Float
+}
+
+type AddressResponse {
+	id : Int
+	city : String!
+	street : String
 }
