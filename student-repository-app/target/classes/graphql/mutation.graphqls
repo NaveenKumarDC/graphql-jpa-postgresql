@@ -1,4 +1,22 @@
-
 type Mutation {
-  addStudent( request : SampleRequest) : StudentResponse!
+  addStudent( request : StudentRequest) : StudentResponse!
+}
+
+
+input StudentRequest {
+  firstName : String!
+  lastName : String!
+  email : String!
+  address: AddressDTO
+  subject: [SubjectDTO]
+}
+
+input AddressDTO{
+  city: String!
+  street: String
+}
+
+input SubjectDTO{
+  subjectName: String!
+  marksObtained:Int!
 }

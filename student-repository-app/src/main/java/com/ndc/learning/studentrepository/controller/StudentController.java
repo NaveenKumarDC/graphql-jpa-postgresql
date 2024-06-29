@@ -1,18 +1,16 @@
 package com.ndc.learning.studentrepository.controller;
 
-import com.ndc.learning.studentrepository.entity.Address;
 import com.ndc.learning.studentrepository.entity.Student;
 import com.ndc.learning.studentrepository.repository.StudentRepository;
-import com.ndc.learning.studentrepository.request.AddressDTO;
-import com.ndc.learning.studentrepository.request.SampleRequest;
+import com.ndc.learning.studentrepository.request.StudentRequest;
+import com.ndc.learning.studentrepository.response.StudentResponse;
+import com.ndc.learning.studentrepository.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-
-import java.util.Objects;
 
 /**
  * Author: Naveen Kumar D C
@@ -25,19 +23,15 @@ import java.util.Objects;
 public class StudentController {
 
   @Autowired
-  StudentRepository studentRepository;
+  private StudentService studentService;
 
   @QueryMapping
   public Student getStudentById(@Argument long id) {
-    return studentRepository.findById(id).get();
+    return studentService.getStudentById(id);
   }
 
   @MutationMapping
-  public Student addStudent(@Argument(name = "request") SampleRequest sampleRequest) {
-    Student student = new Student();
-    student.setFirstName(sampleRequest.getFirstName());
-    student.setLastName(sampleRequest.getLastName());
-    student.setEmail(sampleRequest.getEmail());
-    return studentRepository.save(student);
+  public Student addStudent(@Argument(name = "request") StudentRequest studentRequest) {
+    return studentService.addStudent(studentRequest);
   }
 }

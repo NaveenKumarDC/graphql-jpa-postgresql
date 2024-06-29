@@ -3,6 +3,8 @@ package com.ndc.learning.studentrepository.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * Author: Naveen Kumar D C
  * Date: 25/06/29
@@ -10,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SampleRequest {
+public class StudentRequest {
 
   private String firstName;
 
@@ -19,4 +21,7 @@ public class SampleRequest {
   private String email;
 
   private AddressDTO address;
+
+  private List<SubjectDTO> subject;
+
 }

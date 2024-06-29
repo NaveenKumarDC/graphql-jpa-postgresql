@@ -10,9 +10,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AddressDTO {
+public class SubjectDTO {
 
-  private String city;
-  private String street;
+  private String subjectName;
+  private Double marksObtained;
 
 }
