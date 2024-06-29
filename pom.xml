@@ -11,6 +11,7 @@
     <groupId>com.learning</groupId>
     <artifactId>student-repository</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>student-repository</name>
     <description>student-repository</description>
     <url/>
