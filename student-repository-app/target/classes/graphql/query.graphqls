@@ -1,5 +1,6 @@
 type Query {
 	getStudentById(id : Int) : StudentResponse
+	getStudentByFirstName(firstName: String) : StudentResponse
 }
 
 type StudentResponse {

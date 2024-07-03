@@ -324,3 +324,161 @@ mutation createStudent {
   }
 }
 ```
+
+
+# Enable Spring Security
+Reference doc : https://spring.academy/guides/spring-spring-for-graphql-security
+
+## POM.xml Dependency
+```
+ <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+## Enable spring security
+  To configure Spring Security going forward we encourage users to move to a component-based configuration. 
+In the config package create a new class called SecurityConfig and annotate it with @Configuration and @EnableWebSecurity
+
+### Add below Spring security annotations in your Security Config File
+````java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {}
+````
+
+### Configure Filter chain in Security Config file created
+Disable Cross-Site Request Forgery (CSRF)
+The user should be authenticated for any request in the application.
+Spring Security will never create an HttpSession and it will never use it to obtain the Security Context
+Spring Security’s HTTP Basic Authentication support is enabled by default. However, as soon as any servlet based configuration is provided, HTTP Basic must be explicitly provided.
+````java
+@Bean
+public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+  return http
+          .csrf(csrf -> csrf.disable()) // (1)
+          .authorizeRequests(auth -> {
+            auth.anyRequest().authenticated(); // (2)
+          })
+          .sessionManagement(
+                  session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          ) // (3)
+          .httpBasic(withDefaults()) // (4)
+          .build();
+}
+````
+### Details of security filter chain
+
+1. Disable Cross-Site Request Forgery (CSRF)
+2. The user should be authenticated for any request in the application.
+3. Spring Security will never create an HttpSession and it will never use it to obtain the Security Context
+4. Spring Security’s HTTP Basic Authentication support is enabled by default. However, as soon as any servlet based configuration is provided, HTTP Basic must be explicitly provided.
+
+## Managed Users
+The quickest way to configure users is by creating in-memory users. While this is great for demo purposes this probably isn’t something you will do in production. When you’re creating users you need a way to encode the user's password. In the following example, you will use the default password encoder which is NOT something you should use in production.
+
+````java
+@Bean
+  public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+
+    // InMemory Users.
+    //User with the ADMIN and USER Roles
+    UserDetails admin = User.withUsername("Naveen")
+            .password(encoder.encode("Naveen"))
+            .roles("ADMIN", "USER")
+            .build();
+
+    //User with the ADMIN and USER Roles
+    UserDetails user = User.withUsername("User")
+            .password(encoder.encode("User"))
+            .roles("USER")
+            .build();
+
+    return new InMemoryUserDetailsManager(admin, user);
+  }
+````
+### Associated roles to Graphql Query
+
+```java
+ @QueryMapping
+  @Secured("ROLE_USER") // Specific ROLE
+  public Student getStudentById(@Argument long id) {
+    return studentService.getStudentById(id);
+  }
+
+  @MutationMapping
+  @PreAuthorize("hasRole('ADMIN')") //If User has ADMIN role then this mutation is allowed 
+  public Student addStudent(@Argument(name = "request") StudentRequest studentRequest) {
+    return studentService.addStudent(studentRequest);
+  }
+```
+
+### Start the Spring boot application - StudentRepositoryApplication
+
+#### Access the Graphiql
+URL : 
+
+#### Request
+````
+mutation createStudent {
+  addStudent(
+    request: {
+      firstName: "Naveen"
+      lastName: "Kumar"
+      email: "test@example.com"
+      address: { city: "Bangalore", street: "HSR" }
+      subject: [
+        { subjectName: "Computer Science", marksObtained: 100 }
+        { subjectName: "Data Science", marksObtained: 100 }
+      ]
+    }
+  ) {
+    id
+    fullName
+    firstName
+    lastName
+    email
+    address {
+      city
+      street
+    }
+    learningSubjects {
+      subjectName
+      marksObtained
+    }
+  }
+}
+````
+
+#### Response
+````
+{
+  "errors": [
+    {
+      "message": "Forbidden",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": [
+        "addStudent"
+      ],
+      "extensions": {
+        "classification": "FORBIDDEN"
+      }
+    }
+  ],
+  "data": null
+}
+````
+
+#### To Authenticate
+URL: http://localhost:8093/graphiql?path=/graphql
+
+Refer Managed Users section for more details
+Provide "Username": "Naveen" and "Password" : "Naveen"
+
+After providing the Login details one can perform mutation to add student as this is allowed to Users with ADMIN role only

@@ -22,4 +22,13 @@ public interface StudentService {
    * @return
    */
   Student getStudentById(Long studentId);
+
+
+
+  /**
+   * Get student by FirstName using the typed query
+   * @param firstName
+   * @return
+   */
+  Student getStudentByFirstName(String firstName);
 }
