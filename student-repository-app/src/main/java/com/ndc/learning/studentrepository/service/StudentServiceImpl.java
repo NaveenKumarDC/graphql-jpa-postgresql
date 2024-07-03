@@ -7,6 +7,8 @@ import com.ndc.learning.studentrepository.repository.AddressRepository;
 import com.ndc.learning.studentrepository.repository.StudentRepository;
 import com.ndc.learning.studentrepository.repository.SubjectRepository;
 import com.ndc.learning.studentrepository.request.StudentRequest;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ public class StudentServiceImpl implements StudentService {
 
   @Autowired
   private AddressRepository addressRepository;
+
+  @Autowired
+  private EntityManager entityManager;
 
   @Override
   public Student addStudent(StudentRequest studentRequest) {
@@ -64,5 +69,14 @@ public class StudentServiceImpl implements StudentService {
   @Override
   public Student getStudentById(Long studentId) {
     return studentRepository.findById(studentId).get();
+  }
+
+  @Override
+  public Student getStudentByFirstName(String firstName) {
+    //Type query
+    TypedQuery<Student> query = entityManager.createQuery("select c from Student c where c.firstName = :first_name",
+            Student.class);
+    query.setParameter("first_name", firstName);
+    return query.getSingleResult();
   }
 }

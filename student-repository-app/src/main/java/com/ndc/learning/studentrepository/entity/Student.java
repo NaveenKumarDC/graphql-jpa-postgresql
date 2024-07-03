@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.List;
 /**
@@ -32,10 +33,12 @@ public class Student {
 	@Column(name = "email")
 	private String email;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "address_id")
 	private Address address;
-	
-	@OneToMany(mappedBy = "student")
+
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+	@JoinColumn(name="student_id")
+	@BatchSize(size = 50)
 	private List<Subject> learningSubjects;
 }
